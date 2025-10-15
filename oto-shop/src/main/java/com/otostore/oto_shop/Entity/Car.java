@@ -1,20 +1,23 @@
 package com.otostore.oto_shop.Entity;
 
-import jakarta.persistence.*; // ánh xạ sang các bảng khác trong csdl
-import lombok.*; // sinh tự động getter setter
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.*;
+import java.util.List;
 
-@Entity // đây là 1 Entity
-@Table(name = "car") // ánh xạ vào bảng car
+@Entity
+@Table(name = "car")
 @Getter
 @Setter
-@NoArgsConstructor // Contructor không tham số
-@AllArgsConstructor // Có Tham số
+@NoArgsConstructor
+@AllArgsConstructor
 public class Car {
 
-    @Id // khóa chính
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // tự động tăng ID cho DB
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_car")
     private Integer idCar;
+
     private String name;
     private Double price;
     private Double sale_price;
@@ -22,9 +25,9 @@ public class Car {
     private Integer namsx;
     private String dongco;
     private String hopso;
-    @Column(name = "mausac")   // hoặc "mau_sac" nếu DB có gạch dưới
-    private String mausac;
 
+    @Column(name = "mausac")
+    private String mausac;
 
     @Enumerated(EnumType.STRING)
     private TinhTrang tinhtrang;
@@ -34,16 +37,19 @@ public class Car {
     @Column(name = "ngay_nhap")
     private java.sql.Date ngayNhap;
 
-    @Column(columnDefinition = "TEXT") // mô tả chi tiết kiểu text
+    @Column(columnDefinition = "TEXT")
     private String mota;
 
-    @ManyToOne // Nhiều Car có tể thuộc 1 Catalog
-    @JoinColumn(name = "id_cata") // khóa ngoại trong bảng Car , liên kết với Catalog
+    @ManyToOne
+    @JoinColumn(name = "id_cata")
     private Catalog catalog;
-     public enum TinhTrang {
-        Mới  , Cũ
+
+    // ← THÊM QUAN HỆ NGƯỢC VỚI DonHangChiTiet
+    @OneToMany(mappedBy = "car")
+    @JsonIgnore // ← QUAN TRỌNG: BỎ QUA KHI SERIALIZE
+    private List<DonHangChiTiet> donHangChiTiets;
+
+    public enum TinhTrang {
+        Mới, Cũ
     }
-
 }
-
-

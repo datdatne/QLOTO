@@ -35,6 +35,32 @@ const carService = {
     getBestSellers: (limit = 6) => {
         return api.get(`/cars/best-sellers?limit=${limit}`);
     },
+    // Thêm xe mới
+    createCar: (carData) => {
+        return api.post('/cars', carData);
+    },
+
+    // Cập nhật thông tin xe
+    updateCar: (id, carData) => {
+        return api.put(`/cars/${id}`, carData);
+    },
+
+    // Xóa xe
+    deleteCar: (id) => {
+        return api.delete(`/cars/${id}`);
+    },
+
+    // Upload ảnh xe
+    uploadCarImage: (id, file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        return api.post(`/cars/${id}/upload-image`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+    }
 };
 
 export default carService;

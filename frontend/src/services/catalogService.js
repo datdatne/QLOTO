@@ -10,6 +10,21 @@ const catalogService = {
     getCatalogById: (id) => {
         return api.get(`/catalogs/${id}`);
     },
+
+    // Thêm danh mục mới
+    createCatalog: (catalogData) => {
+        return api.post('/catalogs', catalogData);
+    },
+
+    // Cập nhật danh mục
+    updateCatalog: (id, catalogData) => {
+        return api.put(`/catalogs/${id}`, catalogData);
+    },
+
+    // Xóa danh mục
+    deleteCatalog: (id) => {
+        return api.delete(`/catalogs/${id}`);
+    }
 };
 
 export default catalogService;

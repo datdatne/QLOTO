@@ -1,5 +1,6 @@
 package com.otostore.oto_shop.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore; // ← ĐẢM BẢO CÓ DÒNG NÀY
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,10 +21,11 @@ public class DonHangChiTiet {
     private Double dongia;
 
     @ManyToOne
-    @JoinColumn(name = "id_dh") //khóa ngoại
+    @JoinColumn(name = "id_dh")
+    @JsonIgnore // ← ĐẢM BẢO CÓ DÒNG NÀY
     private DonHang donHang;
 
     @ManyToOne
-    @JoinColumn(name = "id_car")// khóa ngoại
-    private Car car;
+    @JoinColumn(name = "id_car")
+    private Car car; //
 }
