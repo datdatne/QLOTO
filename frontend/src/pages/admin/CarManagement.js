@@ -30,7 +30,8 @@ function CarManagement() {
         mausac: '',
         tinhtrang: 'Mới',
         mota: '',
-        catalog: null
+        catalog: null,
+        image: ''
     });
 
     // Delete confirm
@@ -107,7 +108,8 @@ function CarManagement() {
             mausac: '',
             tinhtrang: 'Mới',
             mota: '',
-            catalog: null
+            catalog: null,
+            image: ''
         });
         setShowModal(true);
     };
@@ -159,6 +161,7 @@ function CarManagement() {
                 mausac: currentCar.mausac,
                 tinhtrang: currentCar.tinhtrang,
                 mota: currentCar.mota,
+                image: currentCar.image || null,
                 catalog: {
                     idCata: parseInt(currentCar.catalog)
                 }
@@ -313,7 +316,7 @@ function CarManagement() {
                             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                                 <thead>
                                 <tr style={{ background: '#f8f9fa' }}>
-                                    <th style={{ padding: '16px', textAlign: 'left', fontWeight: 'bold', color: '#555', borderBottom: '2px solid #e0e0e0' }}>ID</th>
+                                    <th style={{ padding: '16px', textAlign: 'left', fontWeight: 'bold', color: '#555', borderBottom: '2px solid #e0e0e0' }}>Ảnh</th>
                                     <th style={{ padding: '16px', textAlign: 'left', fontWeight: 'bold', color: '#555', borderBottom: '2px solid #e0e0e0' }}>Tên xe</th>
                                     <th style={{ padding: '16px', textAlign: 'left', fontWeight: 'bold', color: '#555', borderBottom: '2px solid #e0e0e0' }}>Giá</th>
                                     <th style={{ padding: '16px', textAlign: 'left', fontWeight: 'bold', color: '#555', borderBottom: '2px solid #e0e0e0' }}>Danh mục</th>
@@ -325,7 +328,37 @@ function CarManagement() {
                                 <tbody>
                                 {cars.map((car) => (
                                     <tr key={car.idCar} style={{ borderBottom: '1px solid #f0f0f0' }}>
-                                        <td style={{ padding: '16px', color: '#666' }}>{car.idCar}</td>
+                                        <td style={{ padding: '16px' }}>
+                                            {car.image ? (
+                                                <img
+                                                    src={car.image}
+                                                    alt={car.name}
+                                                    style={{
+                                                        width: '60px',
+                                                        height: '60px',
+                                                        objectFit: 'cover',
+                                                        borderRadius: '8px',
+                                                        border: '2px solid #e0e0e0'
+                                                    }}
+                                                    onError={(e) => {
+                                                        e.target.style.display = 'none';
+                                                        e.target.nextSibling.style.display = 'flex';
+                                                    }}
+                                                />
+                                            ) : null}
+                                            <div style={{
+                                                width: '60px',
+                                                height: '60px',
+                                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                                borderRadius: '8px',
+                                                display: car.image ? 'none' : 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                fontSize: '24px'
+                                            }}>
+                                                🚗
+                                            </div>
+                                        </td>
                                         <td style={{ padding: '16px', fontWeight: 'bold', color: '#333' }}>{car.name}</td>
                                         <td style={{ padding: '16px', color: '#667eea', fontWeight: 'bold' }}>
                                             {car.sale_price ? (
@@ -705,6 +738,50 @@ function CarManagement() {
                                         fontFamily: 'Arial'
                                     }}
                                 />
+                            </div>
+
+                            {/* URL ảnh */}
+                            <div style={{ gridColumn: '1 / -1' }}>
+                                <label style={{ display: 'block', marginBottom: '8px', fontSize: '15px', fontWeight: 'bold', color: '#555' }}>
+                                    🖼️ Link ảnh (URL)
+                                </label>
+                                <input
+                                    type="text"
+                                    name="image"
+                                    value={currentCar.image || ''}
+                                    onChange={handleInputChange}
+                                    placeholder="https://example.com/car-image.jpg"
+                                    style={{
+                                        width: '100%',
+                                        padding: '12px',
+                                        border: '2px solid #e0e0e0',
+                                        borderRadius: '8px',
+                                        fontSize: '15px',
+                                        outline: 'none',
+                                        boxSizing: 'border-box'
+                                    }}
+                                />
+                                {currentCar.image && (
+                                    <div style={{ marginTop: '12px', textAlign: 'center' }}>
+                                        <img
+                                            src={currentCar.image}
+                                            alt="Preview"
+                                            style={{
+                                                maxWidth: '100%',
+                                                maxHeight: '200px',
+                                                borderRadius: '8px',
+                                                border: '2px solid #e0e0e0',
+                                                objectFit: 'contain'
+                                            }}
+                                            onError={(e) => {
+                                                e.target.src = 'https://via.placeholder.com/300x200?text=Invalid+Image';
+                                            }}
+                                        />
+                                    </div>
+                                )}
+                                <p style={{ fontSize: '12px', color: '#999', marginTop: '8px' }}>
+                                    💡 Tip: Tìm ảnh xe trên Google Images → Click phải → Copy image address
+                                </p>
                             </div>
                         </div>
 

@@ -98,16 +98,45 @@ function CarDetail() {
                     boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                 }}>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0' }}>
-                        {/* Image Section */}
+                        {/* Image Section - ĐÃ SỬA */}
                         <div style={{
                             height: '500px',
-                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                            background: '#f5f7fa',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            fontSize: '120px'
+                            overflow: 'hidden'
                         }}>
-                            🚗
+                            {car.image ? (
+                                <img
+                                    src={car.image}
+                                    alt={car.name}
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover'
+                                    }}
+                                    onError={(e) => {
+                                        e.target.style.display = 'none';
+                                        const placeholder = document.createElement('div');
+                                        placeholder.style.cssText = 'width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-size: 120px;';
+                                        placeholder.innerHTML = '🚗';
+                                        e.target.parentElement.appendChild(placeholder);
+                                    }}
+                                />
+                            ) : (
+                                <div style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '120px'
+                                }}>
+                                    🚗
+                                </div>
+                            )}
                         </div>
 
                         {/* Info Section */}
@@ -192,24 +221,6 @@ function CarDetail() {
                                 </div>
                             </div>
 
-                            {/* CTA Button */}
-                            <button style={{
-                                width: '100%',
-                                padding: '18px',
-                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '12px',
-                                fontSize: '18px',
-                                fontWeight: 'bold',
-                                cursor: 'pointer',
-                                transition: 'opacity 0.3s',
-                                marginBottom: '12px'
-                            }}
-                                    onMouseEnter={(e) => e.target.style.opacity = '0.9'}
-                                    onMouseLeave={(e) => e.target.style.opacity = '1'}>
-                                📞 Liên hệ tư vấn
-                            </button>
 
                             <button
                                 onClick={() => navigate('/contact', { state: { car } })}
