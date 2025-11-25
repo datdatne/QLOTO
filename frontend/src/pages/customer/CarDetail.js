@@ -20,6 +20,15 @@ function CarDetail() {
             });
     }, [id]);
 
+    // ===== HÀM TẠO TÊN ĐẦY ĐỦ =====
+    const getFullCarName = () => {
+        if (!car) return '';
+        if (car.catalog?.name) {
+            return `${car.catalog.name} ${car.name}`;
+        }
+        return car.name;
+    };
+
     if (loading) {
         return (
             <div style={{
@@ -98,7 +107,7 @@ function CarDetail() {
                     boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                 }}>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0' }}>
-                        {/* Image Section - ĐÃ SỬA */}
+                        {/* Image Section */}
                         <div style={{
                             height: '500px',
                             background: '#f5f7fa',
@@ -110,7 +119,7 @@ function CarDetail() {
                             {car.image ? (
                                 <img
                                     src={car.image}
-                                    alt={car.name}
+                                    alt={getFullCarName()}
                                     style={{
                                         width: '100%',
                                         height: '100%',
@@ -141,8 +150,27 @@ function CarDetail() {
 
                         {/* Info Section */}
                         <div style={{ padding: '40px' }}>
+                            {/* Badge danh mục */}
+                            {car.catalog?.name && (
+                                <div style={{
+                                    display: 'inline-block',
+                                    padding: '6px 14px',
+                                    background: '#ede9fe',
+                                    color: '#7c3aed',
+                                    borderRadius: '8px',
+                                    fontSize: '13px',
+                                    fontWeight: '700',
+                                    marginBottom: '16px',
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.5px'
+                                }}>
+                                    {car.catalog.name}
+                                </div>
+                            )}
+
+                            {/* ===== TÊN ĐẦY ĐỦ (CATALOG + CAR NAME) ===== */}
                             <h2 style={{ margin: '0 0 20px 0', fontSize: '32px', color: '#333' }}>
-                                {car.name}
+                                {getFullCarName()}
                             </h2>
 
                             {/* Price */}
@@ -194,33 +222,44 @@ function CarDetail() {
                                     Thông số kỹ thuật:
                                 </h3>
                                 <div style={{ display: 'grid', gap: '12px' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: '#f8f9fa', borderRadius: '8px' }}>
-                                        <span style={{ fontWeight: 'bold', color: '#666' }}>🪑 Số chỗ:</span>
-                                        <span style={{ color: '#333' }}>{car.socho} chỗ</span>
-                                    </div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: '#f8f9fa', borderRadius: '8px' }}>
-                                        <span style={{ fontWeight: 'bold', color: '#666' }}>📅 Năm sản xuất:</span>
-                                        <span style={{ color: '#333' }}>{car.namsx}</span>
-                                    </div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: '#f8f9fa', borderRadius: '8px' }}>
-                                        <span style={{ fontWeight: 'bold', color: '#666' }}>⚙️ Động cơ:</span>
-                                        <span style={{ color: '#333' }}>{car.dongco}</span>
-                                    </div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: '#f8f9fa', borderRadius: '8px' }}>
-                                        <span style={{ fontWeight: 'bold', color: '#666' }}>🔧 Hộp số:</span>
-                                        <span style={{ color: '#333' }}>{car.hopso}</span>
-                                    </div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: '#f8f9fa', borderRadius: '8px' }}>
-                                        <span style={{ fontWeight: 'bold', color: '#666' }}>🎨 Màu sắc:</span>
-                                        <span style={{ color: '#333' }}>{car.mausac}</span>
-                                    </div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: '#f8f9fa', borderRadius: '8px' }}>
-                                        <span style={{ fontWeight: 'bold', color: '#666' }}>✨ Tình trạng:</span>
-                                        <span style={{ color: '#333' }}>{car.tinhtrang}</span>
-                                    </div>
+                                    {car.socho && (
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: '#f8f9fa', borderRadius: '8px' }}>
+                                            <span style={{ fontWeight: 'bold', color: '#666' }}>🪑 Số chỗ:</span>
+                                            <span style={{ color: '#333' }}>{car.socho} chỗ</span>
+                                        </div>
+                                    )}
+                                    {car.namsx && (
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: '#f8f9fa', borderRadius: '8px' }}>
+                                            <span style={{ fontWeight: 'bold', color: '#666' }}>📅 Năm sản xuất:</span>
+                                            <span style={{ color: '#333' }}>{car.namsx}</span>
+                                        </div>
+                                    )}
+                                    {car.dongco && (
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: '#f8f9fa', borderRadius: '8px' }}>
+                                            <span style={{ fontWeight: 'bold', color: '#666' }}>⚙️ Động cơ:</span>
+                                            <span style={{ color: '#333' }}>{car.dongco}</span>
+                                        </div>
+                                    )}
+                                    {car.hopso && (
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: '#f8f9fa', borderRadius: '8px' }}>
+                                            <span style={{ fontWeight: 'bold', color: '#666' }}>🔧 Hộp số:</span>
+                                            <span style={{ color: '#333' }}>{car.hopso}</span>
+                                        </div>
+                                    )}
+                                    {car.mausac && (
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: '#f8f9fa', borderRadius: '8px' }}>
+                                            <span style={{ fontWeight: 'bold', color: '#666' }}>🎨 Màu sắc:</span>
+                                            <span style={{ color: '#333' }}>{car.mausac}</span>
+                                        </div>
+                                    )}
+                                    {car.tinhtrang && (
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', background: '#f8f9fa', borderRadius: '8px' }}>
+                                            <span style={{ fontWeight: 'bold', color: '#666' }}>✨ Tình trạng:</span>
+                                            <span style={{ color: '#333' }}>{car.tinhtrang}</span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
-
 
                             <button
                                 onClick={() => navigate('/contact', { state: { car } })}

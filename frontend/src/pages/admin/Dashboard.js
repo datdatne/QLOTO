@@ -8,7 +8,8 @@ function Dashboard() {
     const [stats, setStats] = useState({
         totalCars: 0,
         totalOrders: 0,
-        totalCatalogs: 0
+        totalCatalogs: 0,
+        totalCarsSold: 0 // ← THÊM THỐNG KÊ MỚI
     });
 
     useEffect(() => {
@@ -24,13 +25,15 @@ function Dashboard() {
         Promise.all([
             fetch('http://localhost:8080/api/cars').then(res => res.json()),
             fetch('http://localhost:8080/api/orders').then(res => res.json()),
-            fetch('http://localhost:8080/api/catalogs').then(res => res.json())
+            fetch('http://localhost:8080/api/catalogs').then(res => res.json()),
+            fetch('http://localhost:8080/api/statistics/total-cars-sold').then(res => res.json()) // ← API MỚI
         ])
-            .then(([carsData, ordersData, catalogsData]) => {
+            .then(([carsData, ordersData, catalogsData, soldData]) => {
                 setStats({
                     totalCars: (carsData.cars || carsData || []).length,
                     totalOrders: (ordersData || []).length,
-                    totalCatalogs: (catalogsData || []).length
+                    totalCatalogs: (catalogsData || []).length,
+                    totalCarsSold: soldData.totalCarsSold || 0 // ← DỮ LIỆU MỚI
                 });
             })
             .catch(err => console.error('Lỗi:', err));
@@ -123,6 +126,36 @@ function Dashboard() {
                             <p style={{ margin: 0, fontSize: '16px', color: '#999' }}>Tổng số xe</p>
                             <h2 style={{ margin: '8px 0 0 0', fontSize: '42px', color: '#333' }}>
                                 {stats.totalCars}
+                            </h2>
+                        </div>
+                    </div>
+
+                    {/* Total Cars Sold - THỐNG KÊ MỚI */}
+                    <div style={{
+                        background: 'white',
+                        padding: '30px',
+                        borderRadius: '16px',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '20px'
+                    }}>
+                        <div style={{
+                            width: '80px',
+                            height: '80px',
+                            borderRadius: '16px',
+                            background: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '36px'
+                        }}>
+                            ✅
+                        </div>
+                        <div>
+                            <p style={{ margin: 0, fontSize: '16px', color: '#999' }}>Xe đã bán</p>
+                            <h2 style={{ margin: '8px 0 0 0', fontSize: '42px', color: '#333' }}>
+                                {stats.totalCarsSold}
                             </h2>
                         </div>
                     </div>

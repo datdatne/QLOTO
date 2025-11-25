@@ -38,7 +38,8 @@ function HomePage() {
 
         if (searchTerm) {
             filtered = filtered.filter(car =>
-                car.name.toLowerCase().includes(searchTerm.toLowerCase())
+                car.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                car.catalog?.name.toLowerCase().includes(searchTerm.toLowerCase())
             );
         }
 
@@ -75,6 +76,14 @@ function HomePage() {
         setSelectedCategory('');
         setSelectedSeat('');
         setPriceRange({ min: '', max: '' });
+    };
+
+    // ===== HÀM TẠO TÊN ĐẦY ĐỦ =====
+    const getFullCarName = (car) => {
+        if (car.catalog?.name) {
+            return `${car.catalog.name} ${car.name}`;
+        }
+        return car.name;
     };
 
     if (loading) {
@@ -215,7 +224,7 @@ function HomePage() {
                     }}>
                         <input
                             type="text"
-                            placeholder="🔍 Tìm kiếm theo tên xe..."
+                            placeholder="🔍 Tìm kiếm theo tên xe hoặc hãng..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             style={{
@@ -498,6 +507,7 @@ function HomePage() {
                                         {car.catalog?.name || 'Xe'}
                                     </div>
 
+                                    {/* ===== TÊN ĐẦY ĐỦ (CATALOG + CAR NAME) ===== */}
                                     <h3 style={{
                                         margin: '0 0 12px 0',
                                         fontSize: '18px',
@@ -505,7 +515,7 @@ function HomePage() {
                                         fontWeight: '600',
                                         lineHeight: '1.4'
                                     }}>
-                                        {car.name}
+                                        {getFullCarName(car)}
                                     </h3>
 
                                     <div style={{ marginBottom: '16px' }}>

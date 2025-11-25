@@ -22,7 +22,7 @@ public class DonHangChiTiet {
 
     @ManyToOne
     @JoinColumn(name = "id_dh")
-    @JsonIgnore // ← ĐẢM BẢO CÓ DÒNG NÀY
+    @JsonIgnore
     private DonHang donHang;
 
     @ManyToOne

@@ -8,6 +8,12 @@ function OrderManagement() {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    // ===== THÊM STATE CHO THỐNG KÊ =====
+    const [statistics, setStatistics] = useState({
+        totalCarsSold: 0,
+        totalRevenue: 0
+    });
+
     // State cho modal chi tiết đơn hàng
     const [showDetailModal, setShowDetailModal] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
@@ -61,6 +67,10 @@ function OrderManagement() {
             console.log('Is Array?', Array.isArray(orderList));
 
             setOrders(Array.isArray(orderList) ? orderList : []);
+
+            // ===== TÍNH TOÁN THỐNG KÊ =====
+            calculateStatistics(Array.isArray(orderList) ? orderList : []);
+
             setLoading(false);
         } catch (error) {
             console.error('Lỗi khi tải đơn hàng:', error);
@@ -68,6 +78,29 @@ function OrderManagement() {
             setOrders([]);
             setLoading(false);
         }
+    };
+
+    // ===== HÀM TÍNH THỐNG KÊ =====
+    const calculateStatistics = (orderList) => {
+        let totalCars = 0;
+        let totalMoney = 0;
+
+        orderList.forEach(order => {
+            // Tính tổng số xe
+            if (order.donHangChiTiets && Array.isArray(order.donHangChiTiets)) {
+                order.donHangChiTiets.forEach(item => {
+                    totalCars += item.soluong || 0;
+                });
+            }
+
+            // Tính tổng tiền
+            totalMoney += order.tongdh || 0;
+        });
+
+        setStatistics({
+            totalCarsSold: totalCars,
+            totalRevenue: totalMoney
+        });
     };
 
     // Hiển thị alert
@@ -185,6 +218,110 @@ function OrderManagement() {
 
             {/* Content */}
             <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px 20px' }}>
+                {/* ===== THỐNG KÊ CARDS ===== */}
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                    gap: '24px',
+                    marginBottom: '30px'
+                }}>
+                    {/* Tổng đơn hàng */}
+                    <div style={{
+                        background: 'white',
+                        padding: '30px',
+                        borderRadius: '16px',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '20px'
+                    }}>
+                        <div style={{
+                            width: '70px',
+                            height: '70px',
+                            borderRadius: '16px',
+                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '32px'
+                        }}>
+                            📦
+                        </div>
+                        <div>
+                            <p style={{ margin: 0, fontSize: '14px', color: '#999', fontWeight: '500' }}>
+                                Tổng đơn hàng
+                            </p>
+                            <h2 style={{ margin: '8px 0 0 0', fontSize: '36px', color: '#333', fontWeight: 'bold' }}>
+                                {orders.length}
+                            </h2>
+                        </div>
+                    </div>
+
+                    {/* Tổng xe đã bán */}
+                    <div style={{
+                        background: 'white',
+                        padding: '30px',
+                        borderRadius: '16px',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '20px'
+                    }}>
+                        <div style={{
+                            width: '70px',
+                            height: '70px',
+                            borderRadius: '16px',
+                            background: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '32px'
+                        }}>
+                            🚗
+                        </div>
+                        <div>
+                            <p style={{ margin: 0, fontSize: '14px', color: '#999', fontWeight: '500' }}>
+                                Tổng xe đã bán
+                            </p>
+                            <h2 style={{ margin: '8px 0 0 0', fontSize: '36px', color: '#333', fontWeight: 'bold' }}>
+                                {statistics.totalCarsSold}
+                            </h2>
+                        </div>
+                    </div>
+
+                    {/* Tổng doanh thu */}
+                    <div style={{
+                        background: 'white',
+                        padding: '30px',
+                        borderRadius: '16px',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '20px'
+                    }}>
+                        <div style={{
+                            width: '70px',
+                            height: '70px',
+                            borderRadius: '16px',
+                            background: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '32px'
+                        }}>
+                            💰
+                        </div>
+                        <div>
+                            <p style={{ margin: 0, fontSize: '14px', color: '#999', fontWeight: '500' }}>
+                                Tổng doanh thu
+                            </p>
+                            <h2 style={{ margin: '8px 0 0 0', fontSize: '28px', color: '#e74c3c', fontWeight: 'bold' }}>
+                                {statistics.totalRevenue.toLocaleString('vi-VN')} đ
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+
                 {/* Header */}
                 <div style={{ marginBottom: '30px' }}>
                     <h2 style={{ margin: 0, fontSize: '24px', color: '#333' }}>
@@ -226,6 +363,9 @@ function OrderManagement() {
                                     Số điện thoại
                                 </th>
                                 <th style={{ padding: '16px', textAlign: 'left', fontWeight: 'bold', color: '#555', borderBottom: '2px solid #e0e0e0' }}>
+                                    Số xe
+                                </th>
+                                <th style={{ padding: '16px', textAlign: 'left', fontWeight: 'bold', color: '#555', borderBottom: '2px solid #e0e0e0' }}>
                                     Tổng tiền
                                 </th>
                                 <th style={{ padding: '16px', textAlign: 'left', fontWeight: 'bold', color: '#555', borderBottom: '2px solid #e0e0e0' }}>
@@ -237,65 +377,82 @@ function OrderManagement() {
                             </tr>
                             </thead>
                             <tbody>
-                            {orders.map((order) => (
-                                <tr key={order.idDh} style={{ borderBottom: '1px solid #f0f0f0' }}>
-                                    <td style={{ padding: '16px', color: '#666' }}>
-                                        #{order.idDh}
-                                    </td>
-                                    <td style={{ padding: '16px' }}>
-                                        <div style={{ fontWeight: 'bold', color: '#333', marginBottom: '4px' }}>
-                                            {order.hoten || '-'}
-                                        </div>
-                                        <div style={{ fontSize: '13px', color: '#999' }}>
-                                            {order.email || '-'}
-                                        </div>
-                                    </td>
-                                    <td style={{ padding: '16px', color: '#666' }}>
-                                        {order.phone || '-'}
-                                    </td>
-                                    <td style={{ padding: '16px', fontWeight: 'bold', color: '#e74c3c' }}>
-                                        {order.tongdh ? order.tongdh.toLocaleString('vi-VN') : '0'} đ
-                                    </td>
-                                    <td style={{ padding: '16px', color: '#666', fontSize: '14px' }}>
-                                        {formatDateTime(order.ngayDatHang)}
-                                    </td>
-                                    <td style={{ padding: '16px', textAlign: 'center' }}>
-                                        <button
-                                            onClick={() => handleViewDetail(order)}
-                                            style={{
-                                                padding: '8px 16px',
-                                                background: '#3498db',
-                                                color: 'white',
-                                                border: 'none',
-                                                borderRadius: '6px',
+                            {orders.map((order) => {
+                                // Tính tổng số xe trong đơn hàng này
+                                const totalCarsInOrder = order.donHangChiTiets?.reduce((sum, item) => sum + (item.soluong || 0), 0) || 0;
+
+                                return (
+                                    <tr key={order.idDh} style={{ borderBottom: '1px solid #f0f0f0' }}>
+                                        <td style={{ padding: '16px', color: '#666' }}>
+                                            #{order.idDh}
+                                        </td>
+                                        <td style={{ padding: '16px' }}>
+                                            <div style={{ fontWeight: 'bold', color: '#333', marginBottom: '4px' }}>
+                                                {order.hoten || '-'}
+                                            </div>
+                                            <div style={{ fontSize: '13px', color: '#999' }}>
+                                                {order.email || '-'}
+                                            </div>
+                                        </td>
+                                        <td style={{ padding: '16px', color: '#666' }}>
+                                            {order.phone || '-'}
+                                        </td>
+                                        <td style={{ padding: '16px' }}>
+                                            <span style={{
+                                                background: '#e3f2fd',
+                                                color: '#1976d2',
+                                                padding: '4px 12px',
+                                                borderRadius: '12px',
                                                 fontSize: '14px',
-                                                cursor: 'pointer',
-                                                marginRight: '8px',
-                                                transition: 'opacity 0.3s'
-                                            }}
-                                            onMouseEnter={(e) => e.target.style.opacity = '0.8'}
-                                            onMouseLeave={(e) => e.target.style.opacity = '1'}>
-                                            👁️ Chi tiết
-                                        </button>
-                                        <button
-                                            onClick={() => handleDeleteClick(order.idDh)}
-                                            style={{
-                                                padding: '8px 16px',
-                                                background: '#e74c3c',
-                                                color: 'white',
-                                                border: 'none',
-                                                borderRadius: '6px',
-                                                fontSize: '14px',
-                                                cursor: 'pointer',
-                                                transition: 'opacity 0.3s'
-                                            }}
-                                            onMouseEnter={(e) => e.target.style.opacity = '0.8'}
-                                            onMouseLeave={(e) => e.target.style.opacity = '1'}>
-                                            🗑️ Xóa
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
+                                                fontWeight: 'bold'
+                                            }}>
+                                                🚗 {totalCarsInOrder} xe
+                                            </span>
+                                        </td>
+                                        <td style={{ padding: '16px', fontWeight: 'bold', color: '#e74c3c' }}>
+                                            {order.tongdh ? order.tongdh.toLocaleString('vi-VN') : '0'} đ
+                                        </td>
+                                        <td style={{ padding: '16px', color: '#666', fontSize: '14px' }}>
+                                            {formatDateTime(order.ngayDatHang)}
+                                        </td>
+                                        <td style={{ padding: '16px', textAlign: 'center' }}>
+                                            <button
+                                                onClick={() => handleViewDetail(order)}
+                                                style={{
+                                                    padding: '8px 16px',
+                                                    background: '#3498db',
+                                                    color: 'white',
+                                                    border: 'none',
+                                                    borderRadius: '6px',
+                                                    fontSize: '14px',
+                                                    cursor: 'pointer',
+                                                    marginRight: '8px',
+                                                    transition: 'opacity 0.3s'
+                                                }}
+                                                onMouseEnter={(e) => e.target.style.opacity = '0.8'}
+                                                onMouseLeave={(e) => e.target.style.opacity = '1'}>
+                                                👁️ Chi tiết
+                                            </button>
+                                            <button
+                                                onClick={() => handleDeleteClick(order.idDh)}
+                                                style={{
+                                                    padding: '8px 16px',
+                                                    background: '#e74c3c',
+                                                    color: 'white',
+                                                    border: 'none',
+                                                    borderRadius: '6px',
+                                                    fontSize: '14px',
+                                                    cursor: 'pointer',
+                                                    transition: 'opacity 0.3s'
+                                                }}
+                                                onMouseEnter={(e) => e.target.style.opacity = '0.8'}
+                                                onMouseLeave={(e) => e.target.style.opacity = '1'}>
+                                                🗑️ Xóa
+                                            </button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                             </tbody>
                         </table>
                     </div>
